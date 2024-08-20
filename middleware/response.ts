@@ -12,11 +12,7 @@ export const successResponse = (
   });
 };
 
-export const errorResponse = (
-  res: Response,
-  status: number,
-  message: string
-) => {
+export const errorResponse = (res: Response, status: number, message: any) => {
   return res.status(status).json({
     message,
   });
