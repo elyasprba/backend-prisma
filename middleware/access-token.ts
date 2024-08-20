@@ -16,7 +16,7 @@ export const checkToken = (req: Request, res: Response, next: NextFunction) => {
   const { authorization } = validationReq.headers as any;
 
   if (!authorization) {
-    errorResponse(res, 401, 'Missing Authorization Token');
+    return errorResponse(res, 401, 'Missing Authorization Token');
   }
 
   const token = authorization.split(' ')[1];
@@ -30,7 +30,7 @@ export const checkToken = (req: Request, res: Response, next: NextFunction) => {
       validationReq.userData = jwtDecode as UserData;
     }
   } catch (error) {
-    errorResponse(res, 401, 'Unauthorized');
+    return errorResponse(res, 401, 'Unauthorized');
   }
   next();
 };
