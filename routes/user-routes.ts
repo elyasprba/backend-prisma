@@ -1,9 +1,9 @@
 import expesss from 'express';
-import { getUserController } from '../controller/users-controller';
+import { getAllUserController } from '../controller/users-controller';
 import { checkToken } from '../middleware/access-token';
 
 const router = expesss.Router();
 
-router.get('/', checkToken, getUserController);
+router.get('/', checkToken, getAllUserController);
 
 export default router;

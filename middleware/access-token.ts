@@ -15,13 +15,12 @@ export const checkToken = (req: Request, res: Response, next: NextFunction) => {
   const validationReq = req as ValidationRequest;
   const { authorization } = validationReq.headers as any;
 
-  console.log('Token: ', authorization);
-
   if (!authorization) {
     errorResponse(res, 401, 'Missing Authorization Token');
   }
 
   const token = authorization.split(' ')[1];
+
   const secret = process.env.JWT_SECRET!;
 
   try {

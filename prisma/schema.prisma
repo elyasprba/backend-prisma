@@ -25,6 +25,7 @@ model Users {
   image         String?
   address       String?
   role          String?
+  refresh_token String?   @unique
   created_at    DateTime  @default(now())
   updated_at    DateTime?
 }

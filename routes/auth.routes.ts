@@ -1,5 +1,9 @@
 import expesss from 'express';
-import { loginUser, regiterUser } from '../controller/auth-controller';
+import {
+  loginUser,
+  refreshTokenUser,
+  regiterUser,
+} from '../controller/auth-controller';
 import {
   userLoginSchema,
   userRegistrationSchema,
@@ -8,7 +12,8 @@ import {
 
 const router = expesss.Router();
 
-router.get('/register', validateData(userRegistrationSchema), regiterUser);
-router.get('/login', validateData(userLoginSchema), loginUser);
+router.post('/register', validateData(userRegistrationSchema), regiterUser);
+router.post('/login', validateData(userLoginSchema), loginUser);
+router.post('/refresh-token', refreshTokenUser);
 
 export default router;
