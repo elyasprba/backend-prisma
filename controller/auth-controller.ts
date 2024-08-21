@@ -4,8 +4,9 @@ import jwt from 'jsonwebtoken';
 
 import { prisma } from '../utils/prisma';
 import { errorResponse } from '../middleware/response';
-import { hashPhoneNumber } from '../utils/hash-phone-number';
 import { expiresInRefreshToken, expiresInToken } from '../constant/time';
+
+import { registerAuthModel } from '../model/auth-model';
 
 export const regiterUser = async (req: Request, res: Response) => {
   try {
@@ -20,31 +21,22 @@ export const regiterUser = async (req: Request, res: Response) => {
     });
 
     if (findUser) {
-      errorResponse(res, 200, 'Email sudah digunakan');
+      return errorResponse(res, 200, 'Email is already in use');
     }
 
-    const result = await prisma.users.create({
-      data: {
-        email,
-        password: hashPassword,
-        phone_number,
-      },
-    });
+    const result = await registerAuthModel(email, hashPassword, phone_number);
 
     res
       .json({
         message: 'Register success!',
         // Basic information about the newly registered user (but avoid sensitive information like passwords).
-        data: {
-          id: result.id,
-          email: result.email,
-          phone_number: hashPhoneNumber(result.phone_number),
-          created_at: result.created_at,
+        result: {
+          id: result?.id,
         },
       })
       .status(201);
   } catch (error) {
-    errorResponse(res, 500, error);
+    return errorResponse(res, 500, 'Internal Service Error');
   }
 };
 
@@ -94,17 +86,15 @@ export const loginUser = async (req: Request, res: Response) => {
       });
     } else {
       errorResponse(res, 403, 'Wrong Password!');
+      return;
     }
   } catch (error) {
     errorResponse(res, 500, error);
+    return;
   }
 };
 
-export const refreshTokenUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const refreshTokenUser = async (req: Request, res: Response) => {
   try {
     const authHeader = req.headers.authorization;
 
@@ -114,7 +104,8 @@ export const refreshTokenUser = async (
     const token = authHeader?.split(' ')[1];
 
     if (!token) {
-      return errorResponse(res, 401, 'Unauthorized');
+      errorResponse(res, 401, 'Unauthorized');
+      return;
     }
 
     const data = JSON.parse(
@@ -129,11 +120,13 @@ export const refreshTokenUser = async (
     });
 
     if (token !== user?.refresh_token) {
-      return errorResponse(res, 401, 'Unauthorized');
+      errorResponse(res, 401, 'Unauthorized');
+      return;
     }
 
     if (user === null) {
-      return errorResponse(res, 404, 'Token refresh failed');
+      errorResponse(res, 404, 'Token refresh failed');
+      return;
     }
 
     const payload = {
@@ -161,5 +154,6 @@ export const refreshTokenUser = async (
     });
   } catch (error) {
     errorResponse(res, 401, 'Unauthorized');
+    return;
   }
 };
