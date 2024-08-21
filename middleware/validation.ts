@@ -7,11 +7,6 @@ export const userRegistrationSchema = z.object({
   phone_number: z.string().min(10).max(13),
 });
 
-export const userLoginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-});
-
 export const updateUserSchema = z.object({
   first_name: z.string().min(4).optional(),
   last_name: z.string().min(4).optional(),

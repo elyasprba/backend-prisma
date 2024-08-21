@@ -16,6 +16,6 @@ export const registerAuthModel = async (
 
     return result;
   } catch (error) {
-    console.log(error);
+    throw new Error('Failed to register account');
   }
 };
