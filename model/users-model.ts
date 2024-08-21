@@ -1,4 +1,6 @@
+import { errorResponse } from '../middleware/response';
 import { prisma } from '../utils/prisma';
+import bcrypt from 'bcrypt';
 
 export const getAllUserModel = async (
   limit: number,
@@ -30,7 +32,7 @@ export const getAllUserModel = async (
 
     return result;
   } catch (error) {
-    console.log(error);
+    throw new Error('Failed to get user');
   }
 };
 
@@ -41,6 +43,7 @@ type UpdateUserParams = {
   email?: string;
   date_of_birth?: Date;
   gender?: string;
+  password?: string;
   image?: string;
   address?: string;
   role?: string;
@@ -51,9 +54,18 @@ export const updateUserModel = async (data: UpdateUserParams) => {
   try {
     const { id, ...updateData } = data;
 
+    let hashPassword = '';
+
+    if (updateData.password) {
+      hashPassword = await bcrypt.hash(updateData.password, 10);
+    }
+
     const updatedUser = await prisma.users.update({
       where: { id },
-      data: updateData,
+      data: {
+        ...updateData,
+        ...(hashPassword ? { password: hashPassword } : {}),
+      },
       select: {
         id: true,
         first_name: true,
@@ -71,7 +83,6 @@ export const updateUserModel = async (data: UpdateUserParams) => {
 
     return updatedUser;
   } catch (error) {
-    console.log(error);
-    throw new Error('Failed to update user'); // Mengembalikan error jika update gagal
+    throw new Error('Failed to update user');
   }
 };
