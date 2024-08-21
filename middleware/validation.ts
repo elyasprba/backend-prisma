@@ -12,6 +12,17 @@ export const userLoginSchema = z.object({
   password: z.string().min(8),
 });
 
+export const updateUserSchema = z.object({
+  first_name: z.string().min(4).optional(),
+  last_name: z.string().min(4).optional(),
+  email: z.string().email().optional(),
+  date_of_birth: z.string().optional(), // Jika menginginkan format tertentu, misalnya ISO string
+  gender: z.string().min(4).optional(),
+  image: z.string().optional(),
+  address: z.string().min(10).optional(),
+  role: z.string().optional(),
+});
+
 export function validateData(schema: z.ZodObject<any, any>) {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -22,7 +33,7 @@ export function validateData(schema: z.ZodObject<any, any>) {
         const errorMessages = error.errors.map((issue: any) => ({
           message: `${issue.path.join('.')} is ${issue.message}`,
         }));
-        res.status(400).json({ error: 'Invalid data', details: errorMessages });
+        res.status(400).json({ details: errorMessages });
       } else {
         res.status(500).json({ error: 'Internal Server Error' });
       }

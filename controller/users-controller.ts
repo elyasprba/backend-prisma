@@ -1,34 +1,20 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 
 import { prisma } from '../utils/prisma';
 import { errorResponse } from '../middleware/response';
+import { getAllUserModel, updateUserModel } from '../model/users-model';
 
-export const getAllUserController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const getAllUserController = async (req: Request, res: Response) => {
   try {
-    const { page = 1, limit = 10 } = req.query as any;
+    const { page = 1, limit = 10, email, id } = req.query as any;
     const skip = (page - 1) * limit;
 
-    const result = await prisma.users.findMany({
-      take: Number(limit),
-      skip: skip,
-      select: {
-        id: true,
-        first_name: true,
-        last_name: true,
-        email: true,
-        date_of_birth: true,
-        gender: true,
-        image: true,
-        address: true,
-        role: true,
-        created_at: true,
-        updated_at: true,
-      },
-    });
+    const result = await getAllUserModel(limit, skip, email, id);
+
+    if (!result?.length) {
+      errorResponse(res, 404, 'User Not Found');
+      return;
+    }
 
     const resultCount = await prisma.users.count();
 
@@ -42,7 +28,35 @@ export const getAllUserController = async (
         result_data: resultCount,
       })
       .status(200);
+    return;
   } catch (error) {
     errorResponse(res, 500, error);
+    return;
+  }
+};
+
+export const updateUserController = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.query;
+    const updateData = req.body;
+
+    if (!Object.keys(updateData).length) {
+      errorResponse(res, 200, 'No data has been updated!');
+      return;
+    }
+
+    const updatedUser = await updateUserModel({
+      id,
+      updated_at: new Date(),
+      ...updateData,
+    });
+
+    return res.status(200).json({
+      message: 'User updated successfully',
+      data: updatedUser,
+    });
+  } catch (error) {
+    errorResponse(res, 500, 'Failed to update user');
+    return;
   }
 };
