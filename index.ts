@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import logger from 'morgan';
 
-import bestRouter from './routes';
+import bestRouter from './src/routes';
 
 dotenv.config();
 
