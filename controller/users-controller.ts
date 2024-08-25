@@ -40,17 +40,21 @@ export const updateUserController = async (req: Request, res: Response) => {
   try {
     const { id } = req.query;
     const updateData = req.body;
+    const file = req.file;
 
-    if (!Object.keys(updateData).length) {
+    if (!Object.keys(updateData).length && !file) {
       errorResponse(res, 200, 'No data has been updated!');
       return;
     }
 
-    const updatedUser = await updateUserModel({
-      id,
-      updated_at: new Date(),
-      ...updateData,
-    });
+    const updatedUser = await updateUserModel(
+      {
+        id,
+        updated_at: new Date(),
+        ...updateData,
+      },
+      file
+    );
 
     return res.status(200).json({
       message: 'User updated successfully',
