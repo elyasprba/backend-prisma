@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -21,7 +21,8 @@ export const regiterUser = async (req: Request, res: Response) => {
     });
 
     if (findUser) {
-      return errorResponse(res, 200, 'Email is already in use');
+      errorResponse(res, 400, 'Email is already in use');
+      return;
     }
 
     const result = await registerAuthModel(email, hashPassword, phone_number);

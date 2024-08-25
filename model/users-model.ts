@@ -1,4 +1,3 @@
-import { errorResponse } from '../middleware/response';
 import { prisma } from '../utils/prisma';
 import bcrypt from 'bcrypt';
 
@@ -44,15 +43,16 @@ type UpdateUserParams = {
   date_of_birth?: Date;
   gender?: string;
   password?: string;
-  image?: string;
   address?: string;
   role?: string;
   updated_at?: string;
 };
 
-export const updateUserModel = async (data: UpdateUserParams) => {
+export const updateUserModel = async (data: UpdateUserParams, file: any) => {
   try {
     const { id, ...updateData } = data;
+
+    const pict = file ? file.path : null;
 
     let hashPassword = '';
 
@@ -65,6 +65,7 @@ export const updateUserModel = async (data: UpdateUserParams) => {
       data: {
         ...updateData,
         ...(hashPassword ? { password: hashPassword } : {}),
+        ...(pict ? { image: pict } : {}),
       },
       select: {
         id: true,
