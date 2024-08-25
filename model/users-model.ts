@@ -1,7 +1,5 @@
-import { error } from 'console';
 import { prisma } from '../utils/prisma';
 import bcrypt from 'bcrypt';
-import upload from '../middleware/upload';
 
 export const getAllUserModel = async (
   limit: number,
