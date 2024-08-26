@@ -18,6 +18,7 @@ export const updateUserSchema = z.object({
   role: z.string().optional(),
 });
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export function validateData(schema: z.ZodObject<any, any>) {
   return (req: Request, res: Response, next: NextFunction) => {
     try {

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { errorResponse } from './response';
+import { errorResponse } from '../utils/response';
 
 interface UserData {
   id: string;
@@ -13,6 +13,7 @@ interface ValidationRequest extends Request {
 
 export const checkToken = (req: Request, res: Response, next: NextFunction) => {
   const validationReq = req as ValidationRequest;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { authorization } = validationReq.headers as any;
 
   if (!authorization) {
@@ -30,7 +31,8 @@ export const checkToken = (req: Request, res: Response, next: NextFunction) => {
       validationReq.userData = jwtDecode as UserData;
     }
   } catch (error) {
-    return errorResponse(res, 401, 'Unauthorized');
+    errorResponse(res, 401, error);
+    return;
   }
   next();
 };

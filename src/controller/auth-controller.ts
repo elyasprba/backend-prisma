@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-import { prisma } from '../utils/prisma';
-import { errorResponse } from '../middleware/response';
+import { prisma } from '../config/prisma';
+import { errorResponse } from '../utils/response';
 import { expiresInRefreshToken, expiresInToken } from '../constant/time';
 
 import { registerAuthModel } from '../model/auth-model';
@@ -37,7 +37,7 @@ export const regiterUser = async (req: Request, res: Response) => {
       })
       .status(201);
   } catch (error) {
-    return errorResponse(res, 500, 'Internal Service Error');
+    return errorResponse(res, 500, error);
   }
 };
 
@@ -154,7 +154,7 @@ export const refreshTokenUser = async (req: Request, res: Response) => {
       refreshToken,
     });
   } catch (error) {
-    errorResponse(res, 401, 'Unauthorized');
+    errorResponse(res, 401, error);
     return;
   }
 };
