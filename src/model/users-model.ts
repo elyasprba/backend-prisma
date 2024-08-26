@@ -1,4 +1,4 @@
-import { prisma } from '../utils/prisma';
+import { prisma } from '../config/prisma';
 import bcrypt from 'bcrypt';
 
 export const getAllUserModel = async (
@@ -31,7 +31,8 @@ export const getAllUserModel = async (
 
     return result;
   } catch (error) {
-    throw new Error('Failed to get user');
+    console.log(error);
+    return;
   }
 };
 
@@ -48,6 +49,7 @@ type UpdateUserParams = {
   updated_at?: string;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const updateUserModel = async (data: UpdateUserParams, file: any) => {
   try {
     const { id, ...updateData } = data;
@@ -84,6 +86,6 @@ export const updateUserModel = async (data: UpdateUserParams, file: any) => {
 
     return updatedUser;
   } catch (error) {
-    throw new Error('Failed to update user');
+    return error;
   }
 };

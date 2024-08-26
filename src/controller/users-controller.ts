@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import bcrypt from 'bcrypt';
 
-import { prisma } from '../utils/prisma';
-import { errorResponse } from '../middleware/response';
+import { prisma } from '../config/prisma';
+import { errorResponse } from '../utils/response';
 import { getAllUserModel, updateUserModel } from '../model/users-model';
 
 export const getAllUserController = async (req: Request, res: Response) => {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { page = 1, limit = 10, email, id } = req.query as any;
     const skip = (page - 1) * limit;
 
@@ -61,7 +61,7 @@ export const updateUserController = async (req: Request, res: Response) => {
       data: updatedUser,
     });
   } catch (error) {
-    errorResponse(res, 500, 'Failed to update user');
+    errorResponse(res, 500, error);
     return;
   }
 };

@@ -19,6 +19,7 @@ const limit = {
 };
 
 //  file upload
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const imageOnlyFilter = (_req: Request, file: any, cb: any) => {
   const extName = path.extname(file.originalname);
   const allowedExt = /jpg|jpeg|png|JPG|JPEG|PNG/;

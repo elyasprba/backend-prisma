@@ -1,4 +1,4 @@
-import { prisma } from '../utils/prisma';
+import { prisma } from '../config/prisma';
 
 export const registerAuthModel = async (
   email: string,
@@ -16,6 +16,7 @@ export const registerAuthModel = async (
 
     return result;
   } catch (error) {
-    throw new Error('Failed to register account');
+    console.log(error);
+    return;
   }
 };
