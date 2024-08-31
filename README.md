@@ -61,7 +61,8 @@ Here are some related projects
 ## Features
 
 - AUTH (LOGIN, REGISTER, REFRESH-TOKEN)
-- USERS (GET, UPDATE, UPLOAD-IMAGE)
+- USERS (READ, UPDATE)
+- PRODUCTS (CREATE, READ, UPDATE) 
 
 
 ## Documentation
