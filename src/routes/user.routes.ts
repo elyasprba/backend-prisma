@@ -2,7 +2,7 @@ import expesss from 'express';
 import {
   getAllUserController,
   updateUserController,
-} from '../controller/users-controller';
+} from '../controller/users.controller';
 import { checkToken } from '../middleware/access-token';
 import { updateUserSchema, validateData } from '../middleware/validation';
 import upload from '../middleware/upload';

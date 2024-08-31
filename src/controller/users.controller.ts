@@ -2,15 +2,23 @@ import { Request, Response } from 'express';
 
 import { prisma } from '../config/prisma';
 import { errorResponse } from '../utils/response';
-import { getAllUserModel, updateUserModel } from '../model/users-model';
+import { getAllUserModel, updateUserModel } from '../model/users.model';
 
 export const getAllUserController = async (req: Request, res: Response) => {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { page = 1, limit = 10, email, id } = req.query as any;
-    const skip = (page - 1) * limit;
+    const {
+      page = '1',
+      limit = '10',
+      email,
+      id,
+    } = req.query as Partial<Record<string, string>>;
 
-    const result = await getAllUserModel(limit, skip, email, id);
+    const pageNumber = parseInt(page, 10);
+    const limitNumber = parseInt(limit, 10);
+
+    const skip = (pageNumber - 1) * limitNumber;
+
+    const result = await getAllUserModel(limitNumber, skip, email, id);
 
     if (!result?.length) {
       errorResponse(res, 404, 'User Not Found');
@@ -19,12 +27,12 @@ export const getAllUserController = async (req: Request, res: Response) => {
 
     const resultCount = await prisma.users.count();
 
-    const totalPage = Math.ceil(resultCount / limit);
+    const totalPage = Math.ceil(resultCount / limitNumber);
 
     res
       .json({
         data: result,
-        current_page: page - 0,
+        current_page: pageNumber - 0,
         result_page: totalPage,
         result_data: resultCount,
       })

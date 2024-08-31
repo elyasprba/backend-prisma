@@ -3,9 +3,9 @@ import {
   loginUser,
   refreshTokenUser,
   regiterUser,
-} from '../controller/auth-controller';
+} from '../controller/auth.controller';
 import { userRegistrationSchema, validateData } from '../middleware/validation';
-import { checkDuplicate } from '../utils/check-duplicate-user';
+import { checkDuplicate } from '../utils/check.duplicate.user';
 
 const router = expesss.Router();
 
