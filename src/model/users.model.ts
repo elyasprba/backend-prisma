@@ -31,8 +31,10 @@ export const getAllUserModel = async (
 
     return result;
   } catch (error) {
-    console.log(error);
-    return;
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error';
+
+    throw new Error(errorMessage);
   }
 };
 
@@ -86,6 +88,9 @@ export const updateUserModel = async (data: UpdateUserParams, file: any) => {
 
     return updatedUser;
   } catch (error) {
-    return error;
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error';
+
+    throw new Error(errorMessage);
   }
 };

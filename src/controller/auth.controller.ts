@@ -6,7 +6,7 @@ import { prisma } from '../config/prisma';
 import { errorResponse } from '../utils/response';
 import { expiresInRefreshToken, expiresInToken } from '../constant/time';
 
-import { registerAuthModel } from '../model/auth-model';
+import { registerAuthModel } from '../model/auth.model';
 
 export const regiterUser = async (req: Request, res: Response) => {
   try {
