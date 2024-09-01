@@ -25,11 +25,11 @@ model Users {
 }
 
 model Products {
-  id          String  @id @default(cuid()) // cuid : cjld2cjxh0000qzrmn831i7rn
+  id          String @id @default(cuid()) // cuid : cjld2cjxh0000qzrmn831i7rn
   name        String
   description String
-  price       Decimal
+  price       Int
   image       String
   stock       Int
-  category    String  @default("COFFEE")
+  category    String @default("COFFEE")
 }
