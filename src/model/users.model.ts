@@ -52,9 +52,9 @@ type UpdateUserParams = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const updateUserModel = async (data: UpdateUserParams, file: any) => {
+export const updateUserModel = async (body: UpdateUserParams, file: any) => {
   try {
-    const { id, ...updateData } = data;
+    const { id, ...updateData } = body;
 
     const pict = file ? file.path : null;
 

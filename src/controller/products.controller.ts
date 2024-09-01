@@ -1,7 +1,34 @@
 import { Request, Response } from 'express';
-import { getAllProducts } from '../model/products.model';
+import {
+  createProductsModel,
+  getAllProductsModel,
+} from '../model/products.model';
 import { errorResponse } from '../utils/response';
 import { prisma } from '../config/prisma';
+
+export const createProductsController = async (req: Request, res: Response) => {
+  try {
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({
+        message: 'Image cannot be empty!',
+      });
+    }
+
+    const result = await createProductsModel(req.body, file);
+
+    res
+      .json({
+        message: 'Create product success',
+        data: result,
+      })
+      .status(201);
+  } catch (error) {
+    errorResponse(res, 500, error);
+    return;
+  }
+};
 
 export const getAllProductsController = async (req: Request, res: Response) => {
   try {
@@ -17,7 +44,12 @@ export const getAllProductsController = async (req: Request, res: Response) => {
 
     const skip = (pageNumber - 1) * limitNumber;
 
-    const result = await getAllProducts(limitNumber, skip, name, category);
+    const result = await getAllProductsModel({
+      limit: limitNumber,
+      skip,
+      name,
+      category,
+    });
 
     if (!result?.length) {
       errorResponse(res, 404, 'User Not Found');
