@@ -5,10 +5,13 @@ const router = expesss.Router();
 import authRouter from './auth.routes';
 import userRouter from './user.routes';
 import productsRouter from './product.routes';
-import { successResponse } from '../utils/response';
 
 router.get('/ping', (_req, res) => {
-  successResponse(res, 200, 'pong');
+  res
+    .json({
+      message: 'pong',
+    })
+    .status(200);
 });
 
 router.use('/api/users', userRouter);
